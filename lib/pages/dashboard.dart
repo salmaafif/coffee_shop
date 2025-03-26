@@ -18,15 +18,21 @@ class _DashboardPageState extends State<DashboardPage> {
       'fragment': const HomeFragment(),
     },
     {
-      'icon': 'assets/checklist.png',
-      'icon_active': 'assets/bag.gif',
-      'fragment': const Center(child: Text('Keranjang')),
-    },
-    {
       'icon': 'assets/coffee-cup.png',
       'icon_active': 'assets/coffee-cup.png',
       'fragment': const Center(child: Text('Menu')),
     },
+    {
+      'icon': 'assets/checklist.png',
+      'icon_active': 'assets/bag.gif',
+      'fragment': const Center(child: Text('Pesanan')),
+    },
+    {
+      'icon': 'assets/user.png',
+      'icon_active': 'assets/user.png',
+      'fragment': const Center(child: Text('User')),
+    },
+    
   ];
 
   @override
