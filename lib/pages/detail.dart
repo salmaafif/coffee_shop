@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:coffee_shop/models/coffee.dart';
+import 'package:coffee_shop/database/order_service.dart';
 import 'package:coffee_shop/widgets/button_primary.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 class DetailPage extends StatefulWidget {
@@ -15,6 +17,8 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPage extends State<DetailPage> {
   String sizeSelected = 'M';
+  int quantity = 1;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +36,8 @@ class _DetailPage extends State<DetailPage> {
           buildDescription(),
           const Gap(30),
           buildSize(),
+          const Gap(24),
+          buildQuantity(),
           const Gap(24),
         ],
       ),
@@ -131,7 +137,7 @@ class _DetailPage extends State<DetailPage> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xffEDEDED).withValues(alpha: 0.35),
+                    color: const Color(0xffEDEDED).withOpacity(0.35),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   alignment: Alignment.center,
@@ -242,7 +248,75 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
+  Widget buildQuantity() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Quantity',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            color: Color(0xff242424),
+          ),
+        ),
+        const Gap(16),
+        Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xffF9F9F9),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: quantity > 1
+                        ? () {
+                            setState(() {
+                              quantity--;
+                            });
+                          }
+                        : null,
+                  ),
+                  Text(
+                    '$quantity',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        quantity++;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget buildPrice() {
+    double price = widget.coffee.price;
+    
+    // Apply price adjustment based on size
+    if (sizeSelected == 'L') {
+      price += 5000;
+    } else if (sizeSelected == 'S') {
+      price -= 2000;
+    }
+    
+    // Multiply by quantity
+    double totalPrice = price * quantity;
+    
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: const BoxDecoration(
@@ -270,7 +344,11 @@ class _DetailPage extends State<DetailPage> {
                 ),
                 const Gap(4),
                 Text(
-                  NumberFormat.decimalPattern().format(widget.coffee.price).replaceAll(',', ''),
+                  NumberFormat.currency(
+                    locale: 'id_ID',
+                    symbol: 'Rp ',
+                    decimalDigits: 0,
+                  ).format(totalPrice),
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
@@ -283,8 +361,10 @@ class _DetailPage extends State<DetailPage> {
           SizedBox(
             width: 217,
             child: ButtonPrimary(
-              title: 'Buy Now',
-              onTap: () {},
+              title: 'Add to Cart',
+              onTap: () {
+                _addToCart(context);
+              },
             ),
           )
         ],
@@ -292,4 +372,30 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
+  void _addToCart(BuildContext context) {
+    final orderProvider = Provider.of<OrderService>(context, listen: false);
+    
+    orderProvider.addToCart(
+      widget.coffee,
+      quantity,
+      sizeSelected,
+    );
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${widget.coffee.name} added to cart'),
+        backgroundColor: const Color(0xffC67C4E),
+        action: SnackBarAction(
+          label: 'VIEW CART',
+          textColor: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+            // Navigate to cart tab
+            // You'll need to implement this navigation
+          },
+        ),
+      ),
+    );
+  }
 }
+
