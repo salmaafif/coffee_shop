@@ -7,7 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class CartFragment extends StatelessWidget {
-  const CartFragment({super.key});
+  const CartFragment({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -303,4 +303,3 @@ class CartFragment extends StatelessWidget {
     );
   }
 }
-

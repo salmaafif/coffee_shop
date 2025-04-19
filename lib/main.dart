@@ -28,7 +28,15 @@ class MainApp extends StatelessWidget {
         ),
         home: const OnBoardPage(),
         routes: {
-          '/dashboard': (context) => const DashboardPage(),
+          '/dashboard': (context) {
+            //mengecek apakah ada argumen untuk tab index
+            final args = ModalRoute.of(context)?.settings.arguments;
+            int initialTabIndex = 0;
+            if (args != null && args is int) {
+              initialTabIndex = args;
+            }
+            return DashboardPage(initialTabIndex: initialTabIndex);
+          },
           '/detail': (context) {
             Coffee coffee = ModalRoute.of(context)!.settings.arguments as Coffee;
             return DetailPage(coffee: coffee);

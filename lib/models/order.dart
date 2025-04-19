@@ -4,7 +4,7 @@ class OrderItem {
   String id;
   Coffee coffee;
   int quantity;
-  String size;
+  String size; //R L J
   double price;
 
   OrderItem({
@@ -50,7 +50,7 @@ class Order {
   String id;
   List<OrderItem> items;
   double totalPrice;
-  String status;
+  String status; //cart, pending, completed, cancelled
   DateTime createdAt;
 
   Order({

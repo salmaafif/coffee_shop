@@ -5,11 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:coffee_shop/pages/fragments/menu_fragment.dart';
 import 'package:provider/provider.dart';
 import 'package:coffee_shop/database/order_service.dart';
-import 'package:coffee_shop/pages/detail.dart';
-import 'package:coffee_shop/models/coffee.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+  const DashboardPage({super.key, required int initialTabIndex});
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -30,7 +28,7 @@ class _DashboardPageState extends State<DashboardPage> {
     },
     {
       'icon': 'assets/checklist.png',
-      'icon_active': 'assets/bag.gif',
+      'icon_active': 'assets/checklist.png',
       'fragment': const CartFragment(),
     },
     {

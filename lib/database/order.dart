@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:coffee_shop/models/order.dart';
 import 'package:path/path.dart';
@@ -197,6 +198,12 @@ class OrderDatabase {
     // Get or create cart
     Order? cart = await getCart();
 
+    //cek apakah sudah dimasukkan ke cart
+    if (kDebugMode) {
+      print('Adding item to cart : ${item.coffee.name}, Size ${item.size}, Quantity: ${item.quantity}');
+    }
+    print('Current cart before adding: ${cart?.items.length ?? 0} items');
+
     if (cart == null) {
       // Create a new cart
       cart = Order(
@@ -208,6 +215,7 @@ class OrderDatabase {
       );
 
       await createOrder(cart);
+      print('New cart created w/ an item');
     } else {
       // Check if the same coffee and size already exists in cart
       int existingIndex = cart.items.indexWhere(
@@ -218,9 +226,11 @@ class OrderDatabase {
         // Update existing item
         cart.items[existingIndex].quantity += item.quantity;
         cart.items[existingIndex].price += item.price;
+        print('Updated existing item in cart');
       } else {
         // Add new item
         cart.items.add(item);
+        print('Add new item');
       }
 
       // Recalculate total price
