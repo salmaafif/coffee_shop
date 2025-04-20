@@ -32,11 +32,11 @@ class _DashboardPageState extends State<DashboardPage> {
       'icon_active': 'assets/logotomoro.png',
       'fragment': const HomeFragment(),
     },
-    {
-      'icon': 'assets/coffee-cup.png',
-      'icon_active': 'assets/coffee-cup.png',
-      'fragment': const MenuFragment(),
-    },
+    // {
+    //   'icon': 'assets/coffee-cup.png',
+    //   'icon_active': 'assets/coffee-cup.png',
+    //   'fragment': const MenuFragment(),
+    // },
     {
       'icon': 'assets/checklist.png',
       'icon_active': 'assets/checklist.png',
@@ -66,7 +66,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   //tampilan keranjang
                   bool showCartBadge =
-                      index == 2 && orderService.cartItemCount > 0;
+                      index == 1 && orderService.cartItemCount > 0;
 
                   return Expanded(
                     child: InkWell(

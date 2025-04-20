@@ -17,7 +17,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPage extends State<DetailPage> {
-  String sizeSelected = 'M';
+  String sizeSelected = 'R';
   int quantity = 1;
 
   @override
@@ -216,7 +216,7 @@ class _DetailPage extends State<DetailPage> {
         const Gap(16),
         Row(
           children:
-              ['S', '', 'M', '', 'L'].map((e) {
+              ['R', '', 'L', '', 'J'].map((e) {
                 if (e == '') return const Gap(16);
 
                 bool isSelected = sizeSelected == e;
@@ -317,8 +317,8 @@ class _DetailPage extends State<DetailPage> {
     // Apply price adjustment based on size
     if (sizeSelected == 'L') {
       price += 5000;
-    } else if (sizeSelected == 'S') {
-      price -= 2000;
+    } else if (sizeSelected == 'J') {
+      price += 10000;
     }
 
     // Multiply by quantity

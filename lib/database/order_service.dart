@@ -49,8 +49,8 @@ class OrderService with ChangeNotifier {
     // Apply price adjustment based on size
     if (size == 'L') {
       price += 5000;
-    } else if (size == 'S') {
-      price -= 2000;
+    } else if (size == 'J') {
+      price += 10000;
     }
 
     OrderItem item = OrderItem(
