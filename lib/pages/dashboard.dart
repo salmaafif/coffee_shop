@@ -7,14 +7,25 @@ import 'package:provider/provider.dart';
 import 'package:coffee_shop/database/order_service.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key, required int initialTabIndex});
+  final int initialTabIndex;
+  
+  const DashboardPage({
+    super.key, 
+    this.initialTabIndex = 0
+  });
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  int indexMenu = 0;
+  late int indexMenu;
+  @override
+  void initState() {
+    super.initState();
+    // Gunakan initialTabIndex jika disediakan
+    indexMenu = widget.initialTabIndex;
+  }
   final menu = [
     {
       'icon': 'assets/home.png',

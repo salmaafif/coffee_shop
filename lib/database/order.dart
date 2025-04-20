@@ -199,15 +199,15 @@ class OrderDatabase {
     Order? cart = await getCart();
 
     //cek apakah sudah dimasukkan ke cart
-    if (kDebugMode) {
-      print('Adding item to cart : ${item.coffee.name}, Size ${item.size}, Quantity: ${item.quantity}');
-    }
+    print(
+      'Adding item to cart : ${item.coffee.name}, Size ${item.size}, Quantity: ${item.quantity}',
+    );
     print('Current cart before adding: ${cart?.items.length ?? 0} items');
 
     if (cart == null) {
       // Create a new cart
       cart = Order(
-        id: '',
+        id: const Uuid().v4(),
         items: [item],
         totalPrice: item.price * item.quantity,
         status: 'cart',
@@ -228,6 +228,7 @@ class OrderDatabase {
         cart.items[existingIndex].price += item.price;
         print('Updated existing item in cart');
       } else {
+        item.id = const Uuid().v4();
         // Add new item
         cart.items.add(item);
         print('Add new item');

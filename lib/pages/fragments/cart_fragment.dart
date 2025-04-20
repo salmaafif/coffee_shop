@@ -1,33 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coffee_shop/models/order.dart';
-import 'package:coffee_shop/database/order_service.dart';
+import 'package:coffee_shop/database/order_service.dart'; // Sesuaikan dengan import yang benar
 import 'package:coffee_shop/widgets/button_primary.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-class CartFragment extends StatelessWidget {
+class CartFragment extends StatefulWidget { // Ubah ke StatefulWidget
   const CartFragment({Key? key}) : super(key: key);
 
   @override
+  State<CartFragment> createState() => _CartFragmentState();
+}
+
+class _CartFragmentState extends State<CartFragment> {
+  @override
+  void initState() {
+    super.initState();
+    // Muat ulang data cart saat widget diinisialisasi
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final orderService = Provider.of<OrderService>(context, listen: false);
+      orderService.loadCart(); // Pastikan metode ini public atau gunakan metode publik lainnya
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('Building CartFragment');
+    
     return Consumer<OrderService>(
       builder: (context, orderService, child) {
-        if (orderService.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: Color(0xffC67C4E)),
-          );
-        }
-
-        if (orderService.cart == null || orderService.cart!.items.isEmpty) {
-          return _buildEmptyCart();
-        }
-
-        return _buildCart(context, orderService);
+        print('CartFragment Consumer rebuilding');
+        print('Cart items: ${orderService.cart?.items.length ?? 0}');
+        print('Is loading: ${orderService.isLoading}');
+        
+        return RefreshIndicator(
+          onRefresh: () async {
+            // Refresh data cart saat pengguna menarik ke bawah
+            await orderService.loadCart(); // Pastikan metode ini public atau gunakan metode publik lainnya
+          },
+          child: _buildCartContent(context, orderService),
+        );
       },
     );
   }
 
+  Widget _buildCartContent(BuildContext context, OrderService orderService) {
+    if (orderService.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xffC67C4E)),
+      );
+    }
+
+    if (orderService.cart == null || orderService.cart!.items.isEmpty) {
+      print('Cart is empty or null');
+      return _buildEmptyCart();
+    }
+
+    print('Building cart with ${orderService.cart!.items.length} items');
+    return _buildCart(context, orderService);
+  }
+
+  // Metode lainnya tetap sama...
   Widget _buildEmptyCart() {
     return Center(
       child: Column(
@@ -78,6 +112,13 @@ class CartFragment extends StatelessWidget {
         backgroundColor: const Color(0xffF9F9F9),
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              // Tombol refresh manual
+              orderService.loadCart(); // Pastikan metode ini public atau gunakan metode publik lainnya
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.delete_outline),
             onPressed: () {

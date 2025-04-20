@@ -17,12 +17,12 @@ class OrderService with ChangeNotifier {
   int get cartItemCount => _cart?.items.length ?? 0;
   double get cartTotal => _cart?.totalPrice ?? 0;
 
-  OrderService(){
-    _loadCart();
+  OrderService() {
+    loadCart();
     _loadOrders();
   }
 
-  Future<void> _loadCart() async{
+  Future<void> loadCart() async {
     _isLoading = true;
     notifyListeners();
 
@@ -32,7 +32,7 @@ class OrderService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadOrders() async{
+  Future<void> _loadOrders() async {
     _isLoading = true;
     notifyListeners();
     //semua pesanan kecuali keranjang
@@ -45,14 +45,14 @@ class OrderService with ChangeNotifier {
 
   Future<void> addToCart(Coffee coffee, int quantity, String size) async {
     double price = coffee.price;
-    
+
     // Apply price adjustment based on size
     if (size == 'L') {
       price += 5000;
     } else if (size == 'S') {
       price -= 2000;
     }
-    
+
     OrderItem item = OrderItem(
       id: '',
       coffee: coffee,
@@ -60,50 +60,57 @@ class OrderService with ChangeNotifier {
       size: size,
       price: price * quantity,
     );
-    
+
     await _db.addToCart(item);
-    await _loadCart();
+    print('Item added to cart, now loading cart...');
+    await loadCart(); // Gunakan metode public
+    print('Cart after adding: ${_cart?.items.length ?? 0} items');
   }
 
   Future<void> updateCartItemQuantity(String itemId, int quantity) async {
     await _db.updateCartItemQuantity(itemId, quantity);
-    await _loadCart();
+    await loadCart();
   }
-  
+
   Future<void> removeFromCart(String itemId) async {
     await _db.removeFromCart(itemId);
-    await _loadCart();
+    await loadCart();
   }
-  
+
   Future<void> clearCart() async {
     if (_cart != null) {
       await _db.deleteOrder(_cart!.id);
-      await _loadCart();
+      await loadCart();
     }
   }
-  
+
   Future<String?> checkout() async {
     String? orderId = await _db.checkoutCart();
-    
+
     if (orderId != null) {
-      await _loadCart();
+      await loadCart();
       await _loadOrders();
     }
-    
+
     return orderId;
   }
-  
+
   Future<void> cancelOrder(String orderId) async {
     Order? order = await _db.getOrder(orderId);
-    
+
     if (order != null) {
       order.status = 'cancelled';
       await _db.updateOrder(order);
       await _loadOrders();
     }
   }
-  
+
   Future<void> refreshOrders() async {
     await _loadOrders();
+  }
+
+  // Metode untuk refresh manual
+  Future<void> refreshCart() async {
+    await loadCart();
   }
 }
