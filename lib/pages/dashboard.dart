@@ -2,7 +2,6 @@ import 'package:coffee_shop/pages/fragments/cart_fragment.dart';
 import 'package:coffee_shop/pages/fragments/dashboard_fragments.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:coffee_shop/pages/fragments/menu_fragment.dart';
 import 'package:provider/provider.dart';
 import 'package:coffee_shop/database/order_service.dart';
 

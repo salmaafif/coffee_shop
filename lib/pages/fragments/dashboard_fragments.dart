@@ -177,7 +177,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             Row(
               children: [
                 const Text(
-                  'Bilzen, Tanjungbalai',
+                  'Pare, Kediri',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,

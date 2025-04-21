@@ -396,10 +396,8 @@ class _DetailPage extends State<DetailPage> {
             Navigator.of(context).pushNamedAndRemoveUntil(
               '/dashboard',
               (route) => false,
-              arguments: 2,
-            ); // Passing index tab cart
-            // Navigate to cart tab
-            // You'll need to implement this navigation
+              arguments: 1,
+            );
           },
         ),
       ),
